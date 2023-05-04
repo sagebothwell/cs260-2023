@@ -3,7 +3,7 @@
 
 using namespace std;
 
-struct Node {
+struct Node { //defined like in class
     string data;
     Node* next;
 };
@@ -22,53 +22,53 @@ class queue{
         void runtests();
 };
 
-int queue::get_length(){
+int queue::get_length(){ //basic getter function
     return this->length;
 }
-queue::queue(){
+queue::queue(){ //all queues start off empty
     this->length = 0;
     this->head = NULL;
     this->current = NULL;
 }
 void queue::enqueue(string s){
     Node* new_node_ptr;
-    new_node_ptr = new Node;
+    new_node_ptr = new Node; //the thing to add
     new_node_ptr->data = s;
     new_node_ptr->next = NULL;
-    if(this->head == NULL){
+    if(this->head == NULL){ //if list is empty, put the element at the start of the list (the start is the same as the back)
         this->head = new_node_ptr;
         this->length++;
     }
     else{
         this->current = this->head;
-        while(this->current->next != NULL){
+        while(this->current->next != NULL){ //go to the back
             this->current = this->current->next;
         }
-        this->current->next = new_node_ptr;
+        this->current->next = new_node_ptr; //put the node at the back
         this->length++;
     }
 }
 string queue::peek(){
-    if(this->length == 0){
+    if(this->length == 0){ //error handling
         return "Error: tried to peek at empty queue, aborting peek function";
     }
-    return this->head->data;
+    return this->head->data; //takes info from head, basically just a getter function
 }
 string queue::dequeue(){
-    if(this->length == 0){
+    if(this->length == 0){ //error handling
         return "Error: tried to take items out of an empty queue, aborting dequeue function";
     }
-    string new_data = this->head->data;
+    string new_data = this->head->data; //grabs the data from the front of the list
     Node* new_ptr; 
     new_ptr = new Node;
-    new_ptr = this->head->next;
-    delete this->head;
+    new_ptr = this->head->next; //assigns a new head
+    delete this->head; //removes old head
     this->head = new_ptr;
     this->length--;
     return new_data;
 
 }
-void queue::runtests(){
+void queue::runtests(){ //everything here is explained by the couts in the function!
     cout << "\nWe will add the following elements to the list: '1', '2nd thing', and 'three'" << endl;
     cout << "List size before adding (expected 0): " << this->get_length() << endl;
     this->enqueue("1");
@@ -94,7 +94,7 @@ void queue::runtests(){
 int main(){
     string choice = "0";
     queue q;
-    while(choice != "5"){
+    while(choice != "5"){ //while you havent chosen to quit
         cout << "Welcome to queue simulator 2023! \n";
         cout << "Choose one of the following: \n";
         cout << "1. Add to queue \n";
@@ -107,12 +107,12 @@ int main(){
         cin.clear();
         getline(cin, choice);
         while(choice != "1" && choice != "2" && choice != "3" && choice != "4" && choice != "5" && choice != "6"){
-            cout << "Invalid choice, please enter an int 1-4: ";
+            cout << "Invalid choice, please enter an int 1-6: ";
         }
         if(choice == "1"){
             cout << "Enter some data: ";
             string d;
-            getline(cin, d);
+            getline(cin, d); //nodes store data as a string, this makes me have to do less error handling/ less work
             q.enqueue(d);
         }
         /*
@@ -120,7 +120,7 @@ int main(){
                 cout << "The list is already empty!\n";
         }
         */
-        else if(choice == "2"){
+        else if(choice == "2"){ //the following 4 else ifs are all just basic function calls
             cout << "\nData from front: " << q.dequeue() << endl << endl;
         }
         else if(choice == "3"){
@@ -135,3 +135,7 @@ int main(){
     }
     return 0;
 }
+//the end
+//UPDATES AFTER DUE DATE:
+//-added comments
+//-updated an error message to say 1-6 instead of 1-4, since integers 1-6 are accepted
