@@ -107,7 +107,39 @@ int list::remove_from_list(int index){
 }
 
 void list::runtests(){
-    cout << "\n";
+    cout << "\nTo begin, we will create a brand new list anc check its length.\n";
+    cout << "New list's length (expected 0): " << this->get_length() << endl;
+    cout << "Now, I will add the following elements in the following order: 5, 2, 4, 1, 4, 3:\n";
+    this->add_to_list(5);
+    this->add_to_list(2);
+    this->add_to_list(4);
+    this->add_to_list(1);
+    this->add_to_list(4);
+    this->add_to_list(3);
+    cout << "Now, I will use the search function to print out elements 1, 2, 3, 4, 5, and 6 in that order.\n";
+    cout << "Expecting 1 2 3 4 4 5: " << this->search(1) << " " << this->search(2) << " " << this->search(3) << " " << this->search(4) << " " << this->search(5) << " " << this->search(6) << endl;
+    cout << "Now I will remove the 4th element 4 times: \n";
+    cout << "Expecting 4: " << this->remove_from_list(4) << endl;
+    cout << "Expecting 4: " << this->remove_from_list(4) << endl;
+    cout << "Expecting 5: " << this->remove_from_list(4) << endl;
+    cout << "Expecting error: ";
+    this->remove_from_list(4); //technically returns a zero but it won't get ever get printed
+    cout << "\nNow, I will print the first 3 element out using search: \n";
+    cout << "Expecting 1 2 3: " << this->search(1) << " " << this->search(2) << " " << this->search(3) << endl;
+    cout << "Next, I will try and search for the 4th smallest element (there are only 3 elements in the list):\n";
+    cout << "Expecting error: ";
+    this->search(4);
+    cout << "\nCurrent list length (expecting 3): " << this->get_length();
+    cout << "\nNow, I will remove the first element of the list 4 times: \n";
+    cout << "Expecting 1: " << this->remove_from_list(1) << endl;
+    cout << "Expecting 2: " << this->remove_from_list(1) << endl;
+    cout << "Expecting 3: " << this->remove_from_list(1) << endl;
+    cout << "Expecting error: ";
+    this->remove_from_list(1); //technically returns a zero but it won't get ever get printed
+    cout << "\nNext, we will try to search for the smallest element (expecting error): ";
+    this->search(1);
+    cout << "\nLength of list (expecting 0): " << this->get_length() << endl;
+    cout << "TESTS COMPLETED" << endl << endl;
 }
 int main(){
     string choice = "0";
