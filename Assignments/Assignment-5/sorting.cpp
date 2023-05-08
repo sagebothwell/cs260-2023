@@ -4,11 +4,11 @@
 using namespace std;
 
 struct Node {
-    int data;
+    int data; //updated to int from string
     Node* next;
 };
 
-class list{ //I copy pasted my code from assignment 3 over so a lot of the structure will look the same
+class list{ 
     private:
         Node* head;
         Node* current;
@@ -22,91 +22,92 @@ class list{ //I copy pasted my code from assignment 3 over so a lot of the struc
         void runtests();
 };
 
-list::list(){
+list::list(){ //constructor for lists, makes an empty list
     this->length = 0;
     this->head = NULL;
     this->current = NULL;
 }
 
-int list::get_length(){
+int list::get_length(){ //basic getter for length
     return this->length;
 }
 
 void list::add_to_list(int val){
-    Node* new_node_ptr;
+    Node* new_node_ptr; //making the node which will be added
     new_node_ptr = new Node;
-    new_node_ptr->data = val;
+    new_node_ptr->data = val; //giving it its value
     new_node_ptr->next = NULL;
-    if(this->head == NULL || val < this->head->data){
+    if(this->head == NULL || val < this->head->data){ //if the list or empty or the int in the new value is smaller than the int in head
         new_node_ptr->next = this->head;
         this->head = new_node_ptr;
         this->length++;
-        return;
+        return; //this just puts makes the new node the new list head
     }
     this->current = this->head;
-    while(this->current->next != NULL && val > this->current->next->data){
+    while(this->current->next != NULL && val > this->current->next->data){ //while not at the end of the list and while the value in the new node is larger than the value in current
         this->current = this->current->next;
     }
-    if(this->current->next == NULL){
+    if(this->current->next == NULL){ //if at the back of the list
         this->current->next = new_node_ptr;
         this->length++;
-        return;
+        return; //just adds to the back of the list
     }
-    else{
+    else{ //if we are somewhere in the middle of the list
         new_node_ptr->next = this->current->next;
         this->current->next = new_node_ptr;
         this->length++;
-        return;
+        return; //just inserts the new node 
     }
 }
 
-int list::search(int index){
-    if(index <= 0 || index > this->length){
+//This function just goes to a certain index, works very similarly to assignment 4 peek function
+int list::search(int index){ 
+    if(index <= 0 || index > this->length){ //if you are looking at spot 0 or less or at a spot which does not fit in the list
         cout << "Error: searched for an item which does not exist, aborting search function.";
         return 0;
     }
     this->current = this->head;
-    for(int i=1; i<index; i++){
+    for(int i=1; i<index; i++){ //starts us at spot 1, goes until spot 'index'
         this->current=this->current->next;
     }
-    return this->current->data;
+    return this->current->data; //returns data from desired spot
 }
 
 int list::remove_from_list(int index){
-    if(index <= 0 || index > this->length){
+    if(index <= 0 || index > this->length){ //same fringe cases as in the search function
         cout << "Error: tried to remove an item which does not exist, aborting removal function.";
         return 0;
     }
     this->current = this->head;
-    for(int i=1; i<index; i++){
+    for(int i=1; i<index; i++){ //gets current to be the desired nth node
         this->current=this->current->next;
     }
-    int val = this->current->data;
+    int val = this->current->data; //store the data from the nth node
     Node* new_node_ptr;
-    new_node_ptr = this->current;
-    if(index == 1){
-        this->head = this->head->next;
+    new_node_ptr = this->current; 
+    if(index == 1){ //if at the start of the list
+        this->head = this->head->next; //delete the head and set head to head->next
         delete new_node_ptr;
         new_node_ptr = 0;
     }
-    else if(this->current->next == NULL){
-        delete new_node_ptr;
+    else if(this->current->next == NULL){ //if at the back of the list
+        delete new_node_ptr; //just delete the last element
         new_node_ptr = 0;
     }
-    else{
+    else{ //if somehwere in the middle of the list
         this->current = this->head;
-        for(int i=1; i<index-1; i++){
+        for(int i=1; i<index-1; i++){ //go to the spot before the desired nth node
             this->current = this->current->next;
         }
-        this->current->next = this->current->next->next;
-        delete new_node_ptr;
+        this->current->next = this->current->next->next; //cut the desired node out of the list
+        delete new_node_ptr; //delete the desired node
         new_node_ptr = 0;
     }
     this->length--;
     return val;
 }
 
-void list::runtests(){
+void list::runtests(){ //couts explain everything going on here
     cout << "\nTo begin, we will create a brand new list anc check its length.\n";
     cout << "New list's length (expected 0): " << this->get_length() << endl;
     cout << "Now, I will add the following elements in the following order: 5, 2, 4, 1, 4, 3:\n";
@@ -128,7 +129,7 @@ void list::runtests(){
     cout << "Expecting 1 2 3: " << this->search(1) << " " << this->search(2) << " " << this->search(3) << endl;
     cout << "Next, I will try and search for the 4th smallest element (there are only 3 elements in the list):\n";
     cout << "Expecting error: ";
-    this->search(4);
+    this->search(4); //technically returns a zero but it won't get ever get printed
     cout << "\nCurrent list length (expecting 3): " << this->get_length();
     cout << "\nNow, I will remove the first element of the list 4 times: \n";
     cout << "Expecting 1: " << this->remove_from_list(1) << endl;
@@ -163,7 +164,7 @@ int main(){
             cout << "\nEnter some data: ";
             string d;
             getline(cin, d); //get the data they want to store
-            int val = stoi(d);
+            int val = stoi(d); //I dont have error handling for stoi, so only entering ints is allowed
             l.add_to_list(val); //run the function
             cout << endl << endl;
         }
