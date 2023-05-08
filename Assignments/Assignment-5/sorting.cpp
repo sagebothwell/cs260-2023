@@ -33,51 +33,62 @@ int list::get_length(){ //basic getter for length
 }
 
 void list::add_to_list(int val){
+    //O(1) to make node
     Node* new_node_ptr; //making the node which will be added
     new_node_ptr = new Node;
     new_node_ptr->data = val; //giving it its value
     new_node_ptr->next = NULL;
+    //O(1) to do this fringe case
     if(this->head == NULL || val < this->head->data){ //if the list or empty or the int in the new value is smaller than the int in head
         new_node_ptr->next = this->head;
         this->head = new_node_ptr;
         this->length++;
         return; //this just puts makes the new node the new list head
     }
+    //Potentially O(n) if it goes all the way to current->next = NULL
     this->current = this->head;
     while(this->current->next != NULL && val > this->current->next->data){ //while not at the end of the list and while the value in the new node is larger than the value in current
         this->current = this->current->next;
     }
+    //O(1) operation
     if(this->current->next == NULL){ //if at the back of the list
         this->current->next = new_node_ptr;
         this->length++;
         return; //just adds to the back of the list
     }
+    //O(1) operation
     else{ //if we are somewhere in the middle of the list
         new_node_ptr->next = this->current->next;
         this->current->next = new_node_ptr;
         this->length++;
         return; //just inserts the new node 
     }
+    //Overall, O(n), only goes through the list once
 }
 
 //This function just goes to a certain index, works very similarly to assignment 4 peek function
 int list::search(int index){ 
+    //O(1) fringe case check
     if(index <= 0 || index > this->length){ //if you are looking at spot 0 or less or at a spot which does not fit in the list
         cout << "Error: searched for an item which does not exist, aborting search function.";
         return 0;
     }
+    //Potentially O(n), could go through the whole lost once
     this->current = this->head;
     for(int i=1; i<index; i++){ //starts us at spot 1, goes until spot 'index'
         this->current=this->current->next;
     }
     return this->current->data; //returns data from desired spot
+    //overall O(n), like adding function
 }
 
 int list::remove_from_list(int index){
+    //O(1) fringe case check
     if(index <= 0 || index > this->length){ //same fringe cases as in the search function
         cout << "Error: tried to remove an item which does not exist, aborting removal function.";
         return 0;
     }
+    //Potentially O(n), can go through the whole list once
     this->current = this->head;
     for(int i=1; i<index; i++){ //gets current to be the desired nth node
         this->current=this->current->next;
@@ -85,6 +96,7 @@ int list::remove_from_list(int index){
     int val = this->current->data; //store the data from the nth node
     Node* new_node_ptr;
     new_node_ptr = this->current; 
+    //O(1) case checking
     if(index == 1){ //if at the start of the list
         this->head = this->head->next; //delete the head and set head to head->next
         delete new_node_ptr;
@@ -94,6 +106,7 @@ int list::remove_from_list(int index){
         delete new_node_ptr; //just delete the last element
         new_node_ptr = 0;
     }
+    //Potentially O(n-1) ~ O(n)
     else{ //if somehwere in the middle of the list
         this->current = this->head;
         for(int i=1; i<index-1; i++){ //go to the spot before the desired nth node
@@ -105,6 +118,7 @@ int list::remove_from_list(int index){
     }
     this->length--;
     return val;
+    //O(n), at worst goes through (n-1)+(n-2)=2n-3 times, that is linear and so we use O(n)
 }
 
 void list::runtests(){ //couts explain everything going on here
