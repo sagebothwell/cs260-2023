@@ -20,7 +20,16 @@ class list{
         int remove_from_list(int);
         int search(int);
         void runtests();
+        bool goodval(int); //checks to see if entered value exists for search/remove
 };
+
+bool list::goodval(int val){
+    if(val <= 0 || val > this->length){ //if you are looking at spot 0 or less or at a spot which does not fit in the list
+        cout << "Error: searched for an item which does not exist, aborting search function." << endl;
+        return false;
+    }
+    return true;
+}
 
 list::list(){ //constructor for lists, makes an empty list
     this->length = 0;
@@ -189,7 +198,9 @@ int main(){
             cout << "\nEnter some integer n to remove the nth smallest element from the list starting with 1 as the smallest: ";
             getline(cin, p); //get the spot the user wants to remove data from
             index = stoi(p);
-            cout << "\nElement which is " << index-1 << " from the smallest element: " << l.remove_from_list(index) << endl << endl; //run the function (it will return a string for this cout statement)
+            if(l.goodval(index)){
+                cout << "\nElement which is " << index-1 << " from the smallest element: " << l.remove_from_list(index) << endl << endl; //run the function (it will return a string for this cout statement)
+            }       
         }
         else if(choice == "3"){ //if the user wants to peek
             int index; //works just like the remove choice above
@@ -197,7 +208,9 @@ int main(){
             string p;
             getline(cin, p);
             index = stoi(p);
-            cout << "\nElement which is " << index-1 << " from the smallest element: " << l.search(index) << endl << endl;
+            if(l.goodval(index)){
+                cout << "\nElement which is " << index-1 << " from the smallest element: " << l.search(index) << endl << endl; //run the function (it will return a string for this cout statement)
+            } 
         }
         else if(choice == "4"){ //if the user wants to see list length
             cout << "\nLength of list: " << l.get_length() << endl << endl; //function call (the function returns an int to complete the cout statement)
