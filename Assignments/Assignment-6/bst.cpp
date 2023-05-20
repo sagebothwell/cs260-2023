@@ -64,7 +64,7 @@ void bst::add_node(Node** node, int val){
         return;
     }
 
-    //NOTE: everything above this takes a constant time as its just case checking, so it has complexity O(n)
+    //NOTE: everything above this takes a constant time as its just case checking, so it has complexity O(1)
 
     else if((*node)->lweight > (*node)->rweight){ //recursive call! 
         (*node)->rweight++;
