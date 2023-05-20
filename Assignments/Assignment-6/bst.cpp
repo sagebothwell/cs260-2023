@@ -73,23 +73,6 @@ void bst::add_node(Node** node, int val){
         (*node)->rweight++;
         return;
     }
-    else if((*node)->left->value <= val && (*node)->right->value <= val){ //if new node is bigger than / equal to node->left and node->right 
-        if((*node)->lweight > (*node)->rweight){ //then if left side is heavier than right side
-            new_node_ptr->left = (*node)->right; //make new node the new start of the right branch with its left branch being the old right branch
-            (*node)->right = new_node_ptr;
-            new_node_ptr->lweight = (*node)->rweight;
-            (*node)->rweight++;
-            return;
-        }
-        else{ //if right side is heavier or equal in size
-            new_node_ptr->left = (*node)->left; //make new node the new start of the left branch with its left branch being the old left branch
-            (*node)->left = new_node_ptr;
-            new_node_ptr->lweight = (*node)->lweight;
-            (*node)->lweight++;
-            return;
-        }
-    }
-
     //NOTE: everything above this takes a constant time as its just case checking, so it has complexity O(n)
 
     else if((*node)->lweight > (*node)->rweight){ //recursive call! 
