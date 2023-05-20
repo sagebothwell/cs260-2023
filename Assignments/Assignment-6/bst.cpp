@@ -46,60 +46,66 @@ bst::bst(){
 }
 
 void bst::add_node(Node** node, int val){
-    Node* new_node_ptr;
+    Node* new_node_ptr; //create the node which will be inserted
     new_node_ptr = new Node;
     new_node_ptr->value = val;
     new_node_ptr->left = NULL;
     new_node_ptr->right = NULL;
     new_node_ptr->lweight = 0;
     new_node_ptr->rweight = 0;
-    if((*node) == NULL){
+    if((*node) == NULL){ //if head is empty, fill it with the new node
         (*node) = new_node_ptr;
         return;
     }
-    else if((*node)->value <= val){
+    else if((*node)->value <= val){ //if head is smaller than new node, make new node the new start of the tree with the old tree as its left branch
         new_node_ptr->left = (*node);
         new_node_ptr->lweight = (*node)->lweight + (*node)->rweight + 1;
         (*node) = new_node_ptr;
         return;
     }
-    else if((*node)->left == NULL){
+    else if((*node)->left == NULL){ //if head->left is NULL, fill it with new node
         (*node)->left = new_node_ptr;
         (*node)->lweight++;
         return;
     }
-    else if((*node)->right == NULL){
+    else if((*node)->right == NULL){ //if head->right is NULL, fill it with new node
         (*node)->right = new_node_ptr;
         (*node)->rweight++;
         return;
     }
-    else if((*node)->left->value <= val && (*node)->right->value <= val){
-        if((*node)->lweight > (*node)->rweight){
-            new_node_ptr->left = (*node)->right;
+    else if((*node)->left->value <= val && (*node)->right->value <= val){ //if new node is bigger than / equal to node->left and node->right 
+        if((*node)->lweight > (*node)->rweight){ //then if left side is heavier than right side
+            new_node_ptr->left = (*node)->right; //make new node the new start of the right branch with its left branch being the old right branch
             (*node)->right = new_node_ptr;
             new_node_ptr->lweight = (*node)->rweight;
             (*node)->rweight++;
             return;
         }
-        else{
-            new_node_ptr->left = (*node)->left;
+        else{ //if right side is heavier or equal in size
+            new_node_ptr->left = (*node)->left; //make new node the new start of the left branch with its left branch being the old left branch
             (*node)->left = new_node_ptr;
             new_node_ptr->lweight = (*node)->lweight;
             (*node)->lweight++;
             return;
         }
     }
-    else if((*node)->lweight > (*node)->rweight){
+
+    //NOTE: everything above this takes a constant time as its just case checking, so it has complexity O(n)
+
+    else if((*node)->lweight > (*node)->rweight){ //recursive call! 
         (*node)->rweight++;
-        add_node(&(*node)->right, val);
+        add_node(&(*node)->right, val); //if left branch is heavier, recursively do this function, this time with the start of the right branch as head
     }
     else{
         (*node)->lweight++;
-        add_node(&(*node)->left, val);
+        add_node(&(*node)->left, val); //if right branch is heavier or equal in size, recursively do this function, this time with the start of the left branch as head
     }
+
+    //The recursive call section will run at worst log(n) times (assuming the tree maintains balance, which it will do under most circumstances)
+    //Overall, the function has Big O complexity of O(log(n)).
 }
 
-// print values of tree in-order, assuming initial BSTNode is not nullptr
+//I stole this function for the sake of checking to make sure my function(s) work, will remove later
 void inOrderTraversal(Node *node) {
     // look and go left if not nullptr
     if(node->left != NULL) {
