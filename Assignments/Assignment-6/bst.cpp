@@ -63,16 +63,7 @@ void bst::add_node(Node** node, int val){
         (*node) = new_node_ptr;
         return;
     }
-    else if((*node)->left == NULL){ //if head->left is NULL, fill it with new node
-        (*node)->left = new_node_ptr;
-        (*node)->lweight++;
-        return;
-    }
-    else if((*node)->right == NULL){ //if head->right is NULL, fill it with new node
-        (*node)->right = new_node_ptr;
-        (*node)->rweight++;
-        return;
-    }
+
     //NOTE: everything above this takes a constant time as its just case checking, so it has complexity O(n)
 
     else if((*node)->lweight > (*node)->rweight){ //recursive call! 
