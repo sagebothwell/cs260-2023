@@ -47,12 +47,11 @@ bst::bst(){
 }
 
 void bst::place_node(Node* new_node, Node** old_node){
+    add_node(old_node, new_node->value);
+
     if(new_node->left != NULL){
         place_node(new_node->left, old_node);
     }
-
-    add_node(old_node, new_node->value);
-
     if(new_node->right != NULL){
         place_node(new_node->right, old_node);
     }
