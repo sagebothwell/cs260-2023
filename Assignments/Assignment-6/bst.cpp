@@ -18,7 +18,8 @@ class bst{
     public:
         bst();
         void add_node(Node** node, int val);
-        void remove_node(int val);
+        void place_node(Node* new_node, Node** old_node);
+        void remove_node(int index, Node** node, int n);
         int traverse_tree(int val, Node* node);
         int get_l_weight();
         int get_r_weight();
@@ -43,6 +44,51 @@ int bst::get_r_weight(){
 bst::bst(){
     this->head = NULL;
     this->current = NULL;
+}
+
+void bst::place_node(Node* new_node, Node** old_node){
+    if(new_node->left != NULL){
+        place_node(new_node->left, old_node);
+    }
+
+    add_node(old_node, new_node->value);
+
+    if(new_node->right != NULL){
+        place_node(new_node->right, old_node);
+    }
+}
+
+void bst::remove_node(int index, Node** node, int n){
+    bool removed = false;
+    if(n == index){
+        cout << "test2";
+        Node* lnode_ptr;
+        Node* rnode_ptr;
+        Node* leftovers;
+        lnode_ptr = (*node)->left;
+        rnode_ptr = (*node)->right;
+        (*node) = NULL;
+        leftovers = this->head;
+        this->head = NULL;
+        if(leftovers != NULL){
+            place_node(leftovers, &(this->head));
+        }
+        if(lnode_ptr != NULL){
+            place_node(lnode_ptr, &(this->head));
+        }
+        if(rnode_ptr != NULL){
+            place_node(rnode_ptr, &(this->head));
+        }
+        cout << "test3";
+        return;
+    }
+    if((*node)->left != NULL){
+        cout << "test1";
+        remove_node(index, &(*node)->left, ++n);
+    }
+    if((*node)->right != NULL){
+        remove_node(index, &(*node)->left, ++n);
+    }
 }
 
 int bst::traverse_tree(int val, Node* node){ //This function will traverse the function (in order traversal) and output the nth node with value m (n,m inputted by users)
@@ -110,6 +156,16 @@ void inOrderTraversal(Node *node) {
         inOrderTraversal(node->right);
     }
 }
+
+void top2bottom_left2right_traversal(Node* node){
+    cout << node->value << " " << "(" << node->lweight << " " << node->rweight << "), ";
+    if(node->left != NULL){
+        top2bottom_left2right_traversal(node->left);
+    }
+    if(node->right != NULL){
+        top2bottom_left2right_traversal(node->right);
+    }
+}
 /*
 int main(){
     int val;
@@ -126,6 +182,7 @@ int main(){
     int choice;
     int value;
     int search_not_found;
+    int index;
     bst tree;
     while(choice != 4){
         cout << "Welcome to Binary Search Tree Simulator 2023!" << endl;
@@ -145,7 +202,12 @@ int main(){
         }
         else if(choice == 2){
             cout << endl << endl;
-            cout << "Option not implemented yet" << endl << endl;
+            cout << "As a reminder, below is all of the elements in the tree oprganized top to bottom and left to right:" << endl;
+            top2bottom_left2right_traversal(tree.get_head());
+            cout << endl << "Which element would you like to remove? (Enter integer n for the nth element from the order above): ";
+            cin >> index;
+            tree.remove_node(index, tree.get_head_ptr(), 1);
+            cout << "Element Removed!" << endl << endl;
         }
         else if(choice == 3){
             cout << endl << endl;
