@@ -61,7 +61,6 @@ void bst::place_node(Node* new_node, Node** old_node){
 void bst::remove_node(int index, Node** node, int n){
     bool removed = false;
     if(n == index){
-        cout << "test2";
         Node* lnode_ptr;
         Node* rnode_ptr;
         Node* leftovers;
@@ -79,11 +78,9 @@ void bst::remove_node(int index, Node** node, int n){
         if(rnode_ptr != NULL){
             place_node(rnode_ptr, &(this->head));
         }
-        cout << "test3";
         return;
     }
     if((*node)->left != NULL){
-        cout << "test1";
         remove_node(index, &(*node)->left, ++n);
     }
     if((*node)->right != NULL){
