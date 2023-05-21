@@ -19,7 +19,7 @@ class bst{
         bst();
         void add_node(Node** node, int val);
         void remove_node(int val);
-        Node* traverse_tree(Node* node, int val);
+        int traverse_tree(int val, Node* node);
         int get_l_weight();
         int get_r_weight();
         Node** get_head_ptr();
@@ -43,6 +43,22 @@ int bst::get_r_weight(){
 bst::bst(){
     this->head = NULL;
     this->current = NULL;
+}
+
+int bst::traverse_tree(int val, Node* node){ //This function will traverse the function (in order traversal) and output the nth node with value m (n,m inputted by users)
+    int n = 0;
+    if(node->left != NULL) {
+        n = n + traverse_tree(val, node->left); //The n value will increase from zero if any nodes with value 'val' are found
+    }
+    if(node->value == val){
+        cout << "Node Value: " << node->value << endl;
+        cout << "Node weight (lweight rweight): (" << node->lweight << " " << node->rweight << ")" << endl; //This is good extra info to have for error checking and testing
+        return 1; //increments n
+    }
+    if(node->right != NULL) {
+        n = n + traverse_tree(val, node->right); //The n value will increase from zero if any nodes with value 'val' are found
+    }
+    return n; //returns a 0 only when no nodes are found, letting me have a custom no nodes found message in main.
 }
 
 void bst::add_node(Node** node, int val){
@@ -94,7 +110,7 @@ void inOrderTraversal(Node *node) {
         inOrderTraversal(node->right);
     }
 }
-
+/*
 int main(){
     int val;
     bst tree;
@@ -103,5 +119,46 @@ int main(){
         tree.add_node(tree.get_head_ptr(), val);
         inOrderTraversal(tree.get_head());
         cout << endl;
+    }
+}
+*/
+int main(){
+    int choice;
+    int value;
+    int search_not_found;
+    bst tree;
+    while(choice != 4){
+        cout << "Welcome to Binary Search Tree Simulator 2023!" << endl;
+        cout << "What would you like to do?" << endl;
+        cout << "1. Add to the binary tree" << endl;
+        cout << "2. Remove from the binary tree" << endl;
+        cout << "3. Search the binary tree" << endl;
+        cout << "4. Quit" << endl;
+        cout << "Choice: ";
+        cin >> choice;
+        if(choice == 1){
+            cout << endl << endl;
+            cout << "What value do you want to add (enter an integer): ";
+            cin >> value;
+            tree.add_node(tree.get_head_ptr(), value);
+            cout << "Node Added!" << endl << endl;
+        }
+        else if(choice == 2){
+            cout << endl << endl;
+            cout << "Option not implemented yet" << endl << endl;
+        }
+        else if(choice == 3){
+            cout << endl << endl;
+            cout << "This search function will look through the tree using in order traversal." << endl;
+            cout << "What value would you like to search for in the tree (Enter an int): ";
+            cin >> value;
+            cout << endl;
+            cout << "Below are all of the nodes in the list with your chosen value:" << endl;
+            search_not_found = tree.traverse_tree(value, tree.get_head());
+            if(search_not_found == 0){
+                cout << "Sorry, it appears there are no elements in the list with your chosen value.";
+            }
+            cout << endl << endl;
+        }
     }
 }
