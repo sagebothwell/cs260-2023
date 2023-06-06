@@ -56,7 +56,12 @@ Graph::Graph(){
 }
 
 Graph::~Graph(){
-
+    for(auto node : nodes){
+        for(auto edge : node->Get_Neighbors()){
+            delete edge;
+        }
+        delete node;
+    }
 }
 
 int Graph::get_size(){
@@ -88,11 +93,72 @@ void Graph::add_edge(string sourceName, string destinationName, int weight){
 }
 
 string Graph::shortest_path(string sourceName){
-
+    return "";
 }
 
 string Graph::minimum_spanning_tree(){
-
+    // Minimum Spanning Tree algorithm (using Kruskal's algorithm)
+    if (nodes.empty()) {
+        return "";
+    }
+    // Sort all edges
+    vector<edge*> allEdges;
+    for (auto& node : nodes) {
+        for (auto& edge : node->Get_Neighbors()) {
+            allEdges.push_back(edge);
+        }
+    }
+    // Create a vector of individual graphs for each node
+    vector<Graph*> nodeGraphs;
+    for (auto& node : nodes) {
+        Graph* newGraph = new Graph();
+        newGraph->add_node(node->get_value());
+        nodeGraphs.push_back(newGraph);
+    }
+    // Create a vector to store the edges of the minimum spanning tree
+    vector<edge*> minimumSpanningTreeEdges;
+    // Combine smaller graphs into a final minimum spanning tree graph
+    for (auto& edge : allEdges) {
+        // Find the graphs that contain the source and destination nodes of the edge
+        Graph* sourceGraph = nullptr;
+        Graph* destinationGraph = nullptr;
+        for (auto& graph : nodeGraphs) {
+            if (graph->get_size() > 0) {
+                if (graph->nodes[0]->get_value() == edge->source->get_value()) {
+                    sourceGraph = graph;
+                }
+                if (graph->nodes[0]->get_value() == edge->destination->get_value()) {
+                    destinationGraph = graph;
+                }
+            }
+        }
+        // Combine the graphs if they are not the same
+        if (sourceGraph != nullptr && destinationGraph != nullptr && sourceGraph != destinationGraph) {
+            // Add the edge to the minimum spanning tree
+            minimumSpanningTreeEdges.push_back(edge);            
+            // Merge destinationGraph into sourceGraph
+            for (auto& node : destinationGraph->nodes) {
+                sourceGraph->add_node(node->get_value());
+            }
+            for (auto& node : destinationGraph->nodes) {
+                for (auto& neighbor : node->Get_Neighbors()) {
+                    sourceGraph->add_edge(node->get_value(), neighbor->destination->get_value(), neighbor->weight);
+                }
+            }
+            // Clear the destinationGraph
+            destinationGraph->nodes.clear();
+        }
+    }
+    // Delete the smaller graphs
+    for (auto& graph : nodeGraphs) {
+        delete graph;
+    }
+    // Build the string representation of the minimum spanning tree
+    string result;
+    for (auto& edge : minimumSpanningTreeEdges) {
+        result += edge->source->get_value() + " - " + edge->destination->get_value() + "\n";
+    }
+    return result;
 }
 
 //GraphNode stuff
@@ -121,22 +187,23 @@ string GraphNode::get_value(){
 }
 
 int main(){
-    
-    //tests edge
-    edge *newEdge = new edge{nullptr, nullptr, 42};
-    cout << "newEdge->source: " << newEdge->source << "\nnewEdge->desitination: " << newEdge->destination << "\nnewEdge->weight: " << newEdge->weight << endl;
-    
-    //create node for test
-    GraphNode *newNode = new GraphNode("testguy100");
-    cout << "newNode->get_value(): " << newNode->get_value() << endl;
-    cout << "newNode->getNeighbors().size(): " << newNode->Get_Neighbors().size() << endl;
-    
-    //add edge to node
-    newNode->Add_Edge(newNode, 1);
-    cout << "newNode->Get_Neighbors().size(): " << newNode->Get_Neighbors().size() << endl;
-    cout << "newNode->Get_Neighbors().at(0)->destination-get_value(): " << newNode->Get_Neighbors().at(0)->destination->get_value() << endl;
-    
-    //delete node
-    delete newNode;
+
+    Graph g;
+    g.add_node("A");
+    g.add_node("B");
+    g.add_node("C");
+    g.add_node("D");
+    g.add_node("E");
+    g.add_node("F");
+    g.add_edge("A", "B", 1);
+    g.add_edge("A", "C", 1);
+    g.add_edge("A", "D", 1);
+    g.add_edge("B", "C", 1);
+    g.add_edge("D", "C", 1);
+    g.add_edge("B", "E", 1);
+    g.add_edge("E", "F", 1);
+    g.add_edge("F", "C", 1);
+    g.add_edge("E", "C", 1);
+    cout << g.minimum_spanning_tree();
     return 0;
 }
