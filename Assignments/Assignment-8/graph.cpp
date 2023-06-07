@@ -22,11 +22,23 @@ class GraphNode {
         //get value of node
         string get_value();
         ~GraphNode();
+        void set_visited(bool);
+        void set_distance(int);
+        int get_distance();
+        bool get_visited();
+        void set_predecessor(string);
+        string get_predecessor();
     private:
         //stored valued
         string value;
         //reference to neighbors
         vector<edge*> neighbors;
+        //bool for shortest path
+        bool visited;
+        //int for distance to this node (shortest path)
+        int distance;
+        //string for predecessor name (shortest path)
+        string predecessor;
 };
 
 class Graph{
@@ -40,7 +52,7 @@ class Graph{
         //add edge
         void add_edge(string sourceName, string destinationName, int weight);
         //shortest path, take source and return string representing shortest paths from source to each destination node
-        string shortest_path(string sourceName);
+        string shortest_path(string source_name, string destination_name);
         //minimum spanning tree
         string minimum_spanning_tree();
         //get size of graph nodes list
@@ -89,8 +101,74 @@ void Graph::add_edge(string sourceName, string destinationName, int weight){
     }
 }
 
-string Graph::shortest_path(string sourceName){
-    return "";
+string Graph::shortest_path(string source_name, string destination_name){
+    if(source_name == destination_name){
+        return source_name;
+    }
+    for(auto node : this->nodes){ //go through each node in the graph
+        node->set_visited(false); //set each node in the graph to unvisted
+        node->set_predecessor(""); //set the name of the predecessor to an empty string
+        if(node->get_value() != source_name){
+            node->set_distance(this->nodes.size()+1); //unweighted graph, at largest a distance can be going through each spot once, thus this is effectively infinity
+        }
+        else{
+            node->set_distance(0); //the source node is already at the source node
+        }
+    }
+    int index = 0; //make an index which will increase as we visit nodes
+    while(index <= this->nodes.size()){ //while we have not gone through each node
+        index++; //increase index
+        int small_val = this->nodes.size()+1; //new int for the smallest distance to visit
+        for(auto node : this->nodes){ //go through each node
+            if(node->get_distance() <= small_val && node->get_visited() == false){ //if a nonvisited node has a smaller distance than small_val
+                small_val = node->get_distance(); //update small_val when we find a path with a smaller val
+            }
+        }
+        //now we know the smallest distance held in an unvisted node
+        for(auto node : this->nodes){ //go through each node
+            if(node->get_distance() == small_val && node->get_visited() == false){ //if at the unvisted node with smallest distance
+                node->set_visited(true); //set this node to visited
+                for(auto edge : node->Get_Neighbors()){ //for each of this node's edges
+                    if(edge->destination->get_distance() > node->get_distance()+1){ //if we find a new shortest path to a node
+                        edge->destination->set_distance(node->get_distance()+1); //update the distance to the node to this new shortest path
+                        edge->destination->set_predecessor(node->get_value()); //update the node's predecessor to the node before it in the path
+                    }
+                }
+                break;
+            }
+        }
+    }
+    //Now, each node should have the shortest path from the source found along with predecessors, so now we just have to print the desired part
+    string shortest_path;
+    GraphNode* destination_node = nullptr;
+
+    // Find the destination node
+    for (auto node : this->nodes) {
+        if (node->get_value() == destination_name) {
+            destination_node = node;
+            break;
+        }
+    }
+    if (destination_node != nullptr) { //I think this this is always passed but never can be too safe!
+        // Traverse the predecessors from destination to source to construct the shortest path string
+        GraphNode* current_node = destination_node;
+        while (current_node != nullptr) {
+            shortest_path = current_node->get_value() + " " + shortest_path;
+            string predecessor_name = current_node->get_predecessor();
+            if (predecessor_name != "") { //checks to make sure a predecessor exists (it doesnt for non source node)
+                for (auto node : this->nodes) {
+                    if (node->get_value() == predecessor_name){
+                        current_node = node; //set current to the old predecessor
+                        break;
+                    }
+                }
+            } 
+            else {
+                current_node = nullptr; //if at source node, set current to nullptr to escape
+            }
+        }
+    }
+    return shortest_path;
 }
 
 string Graph::minimum_spanning_tree(){
@@ -145,19 +223,41 @@ string Graph::minimum_spanning_tree(){
     }
     string tree;
     for (auto edge : mst_edges) {
-        tree += edge->source->get_value() + " - " + edge->destination->get_value() + "\n";
+        tree += edge->source->get_value() + " - " + edge->destination->get_value() + "\n"; //creates a string displaying all edges in the mst
     }
-
     for(auto subgraphs: graphs){ //delete the graphs that were created
         delete subgraphs;
     }
-
     return tree;
 }
 
 //GraphNode stuff
 GraphNode::GraphNode(string name){
     value = name;
+}
+
+void GraphNode::set_visited(bool visit){
+    this->visited = visit;
+}
+
+void GraphNode::set_distance(int dist){
+    this->distance = dist;
+}
+
+int GraphNode::get_distance(){
+    return this->distance;
+}
+
+bool GraphNode::get_visited(){
+    return this->visited;
+}
+
+void GraphNode::set_predecessor(string name){
+    this->predecessor = name;
+}
+
+string GraphNode::get_predecessor(){
+    return this->predecessor;
 }
 
 GraphNode::~GraphNode(){
@@ -182,6 +282,7 @@ string GraphNode::get_value(){
 
 int main(){
     Graph g;
+    //building a graph with 8 nodes and 17 edges
     g.add_node("A");
     g.add_node("B");
     g.add_node("C");
@@ -204,7 +305,21 @@ int main(){
     g.add_edge("B", "E", 1);
     g.add_edge("F", "H", 1);
     g.add_edge("G", "C", 1);
-    g.add_edge("B", "D", 1);   
+    g.add_edge("B", "D", 1);
+    g.add_edge("G", "G", 1); 
+    g.add_edge("H", "H", 1);
+    g.add_edge("B", "H", 1); 
+    //testing minimal spanning tree (expects 8 nodes but only 7 edges) 
     cout << g.minimum_spanning_tree();
+    //testing shortest path
+    cout << "Shortest path from A to A: " << g.shortest_path("A", "A") << endl;
+    cout << "Shortest path from A to B: " << g.shortest_path("A", "B") << endl;
+    cout << "Shortest path from A to C: " << g.shortest_path("A", "C") << endl;
+    cout << "Shortest path from A to D: " << g.shortest_path("A", "D") << endl;
+    cout << "Shortest path from A to E: " << g.shortest_path("A", "E") << endl;
+    cout << "Shortest path from A to F: " << g.shortest_path("A", "F") << endl;
+    cout << "Shortest path from A to G: " << g.shortest_path("A", "G") << endl;
+    cout << "Shortest path from A to H: " << g.shortest_path("A", "H") << endl;
+    cout << "Shortest path from C to H: " << g.shortest_path("C", "H");
     return 0;
 }
