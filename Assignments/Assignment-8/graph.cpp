@@ -281,6 +281,7 @@ string GraphNode::get_value(){
 }
 
 int main(){
+    //first tests with g
     Graph g;
     //building a graph with 8 nodes and 17 edges
     g.add_node("A");
@@ -310,6 +311,7 @@ int main(){
     g.add_edge("H", "H", 1);
     g.add_edge("B", "H", 1); 
     //testing minimal spanning tree (expects 8 nodes but only 7 edges) 
+    cout << "Minimum Spanning Tree 1: \n";
     cout << g.minimum_spanning_tree();
     //testing shortest path
     cout << "Shortest path from A to A: " << g.shortest_path("A", "A") << endl;
@@ -320,6 +322,37 @@ int main(){
     cout << "Shortest path from A to F: " << g.shortest_path("A", "F") << endl;
     cout << "Shortest path from A to G: " << g.shortest_path("A", "G") << endl;
     cout << "Shortest path from A to H: " << g.shortest_path("A", "H") << endl;
-    cout << "Shortest path from C to H: " << g.shortest_path("C", "H");
+    cout << "Shortest path from C to H: " << g.shortest_path("C", "H") << endl;
+
+    //second test with g2
+    Graph g2;
+    g2.add_node("A");
+    g2.add_node("B");
+    g2.add_node("C");
+    g2.add_node("D");
+    g2.add_node("E");
+    g2.add_node("F");
+    g2.add_edge("A","B",1);
+    g2.add_edge("A","C",1);
+    g2.add_edge("B","B",1);
+    g2.add_edge("C","B",1);
+    g2.add_edge("A","E",1);
+    g2.add_edge("E","B",1);
+    g2.add_edge("A","D",1);
+    g2.add_edge("D","C",1);
+    g2.add_edge("E","C",1);
+    g2.add_edge("E","F",1);
+    g2.add_edge("F","C",1);
+    g2.add_edge("E","E",1);
+    //second test for spanning tree
+    cout << "Minimum Spanning Tree 2:\n";
+    cout << g2.minimum_spanning_tree();
+    //second set of tests for shortest path
+    cout << "Shortest path from A to F: " << g2.shortest_path("A", "F") << endl;
+    cout << "Shortest path from D to B: " << g2.shortest_path("D", "B") << endl;
+    cout << "Shortest path from F to B: " << g2.shortest_path("F", "B") << endl;
+    cout << "Shortest path from E to E: " << g2.shortest_path("E", "E") << endl;
+    cout << "Shortest path from C to A: " << g2.shortest_path("C", "A") << endl;
+    
     return 0;
 }
