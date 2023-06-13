@@ -295,3 +295,7 @@ A problem that graphs can solve:
             reached from nodes in set A)
     If each of these criteria are met, then that means we have a bijective function from set A to set B and therefore we have an invertible function.
     I'm not sure how efficient this would be in practice for massive sets, but it would hypothetically work and at times may be easier than an actual mathematical proof. 
+    Also, just by properties of bijections, this method could also be used to show two sets are the same size, but it would never be the most efficient way to do that.
+    Finally, if you already knew the sets were the same size, you could just check criteria 2 or criteria 3 to reach the conclusion that the function was bijective and thus
+    has an inverse.
+
