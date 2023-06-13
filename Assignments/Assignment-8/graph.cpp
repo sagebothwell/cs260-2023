@@ -57,6 +57,8 @@ class Graph{
         string minimum_spanning_tree();
         //get size of graph nodes list
         int get_size();
+        //getter for the nodes vector
+        vector<GraphNode*> get_nodes();
     private:
         //some way of storing data
         vector<GraphNode *> nodes;
@@ -64,13 +66,17 @@ class Graph{
 
 //Graph Stuff
 Graph::Graph(){
-
+ //never ended up needing this constructor to do anything
 }
 
 Graph::~Graph(){
     for(int i = 0; i < nodes.size(); i++){
         delete nodes.at(i);
     }
+}
+
+vector<GraphNode*> Graph::get_nodes(){
+    return this->nodes;
 }
 
 int Graph::get_size(){
@@ -141,7 +147,6 @@ string Graph::shortest_path(string source_name, string destination_name){
     //Now, each node should have the shortest path from the source found along with predecessors, so now we just have to print the desired part
     string shortest_path;
     GraphNode* destination_node = nullptr;
-
     // Find the destination node
     for (auto node : this->nodes) {
         if (node->get_value() == destination_name) {
@@ -149,7 +154,7 @@ string Graph::shortest_path(string source_name, string destination_name){
             break;
         }
     }
-    if (destination_node != nullptr) { //I think this this is always passed but never can be too safe!
+    if (destination_node != nullptr && destination_node->get_distance() <= this->nodes.size()) { //I think this this is always passed but never can be too safe!
         // Traverse the predecessors from destination to source to construct the shortest path string
         GraphNode* current_node = destination_node;
         while (current_node != nullptr) {
@@ -164,10 +169,14 @@ string Graph::shortest_path(string source_name, string destination_name){
                 }
             } 
             else {
-                current_node = nullptr; //if at source node, set current to nullptr to escape
+                current_node = nullptr; //if at source node, set current to nullptr to escape (still adds source node to the string though)
             }
         }
     }
+    else{
+        return "Either no path exists from node " + source_name + " to " + destination_name + " or the node(s) you inputted do not exist!";
+    }
+
     return shortest_path;
 }
 
@@ -183,7 +192,7 @@ string Graph::minimum_spanning_tree(){
     //this next segment populates the all_edges vector with all of the edges in the parent graph    
     for(auto node_index: this->nodes){ //iterate through each node in the graph
         for(auto edge_index: node_index->Get_Neighbors()){ //iterate through each node's set of edges
-            all_edges.push_back(edge_index); //add each edge which is itereted to to the all_edges vector (all edges will be added)
+            all_edges.push_back(edge_index); //add each edge which is iterated to to the all_edges vector (all edges will be added)
         }
     }
     //this next segment will populate the graphs vector
@@ -284,6 +293,7 @@ int main(){
     //first tests with g
     Graph g;
     //building a graph with 8 nodes and 17 edges
+    cout << "To begin the tests, I will create the same graph 1 as detailed in the read me (8 nodes and 17 edges). \n";
     g.add_node("A");
     g.add_node("B");
     g.add_node("C");
@@ -311,20 +321,23 @@ int main(){
     g.add_edge("H", "H", 1);
     g.add_edge("B", "H", 1); 
     //testing minimal spanning tree (expects 8 nodes but only 7 edges) 
-    cout << "Minimum Spanning Tree 1: \n";
+    cout << endl << "[add_node test] Number of nodes in the graph (Expecting 8): " << g.get_size() << endl;
+    cout << "[add_edge test] Number of edges connected to node E (Expecting 5): " << g.get_nodes().at(4)->Get_Neighbors().size() << endl;
+    cout << "[minimum_spanning_tree test] Minimum Spanning Tree of Graph 1 (Expecting 7 edges and a fully connected graph): \n";
     cout << g.minimum_spanning_tree();
     //testing shortest path
-    cout << "Shortest path from A to A: " << g.shortest_path("A", "A") << endl;
-    cout << "Shortest path from A to B: " << g.shortest_path("A", "B") << endl;
-    cout << "Shortest path from A to C: " << g.shortest_path("A", "C") << endl;
-    cout << "Shortest path from A to D: " << g.shortest_path("A", "D") << endl;
-    cout << "Shortest path from A to E: " << g.shortest_path("A", "E") << endl;
-    cout << "Shortest path from A to F: " << g.shortest_path("A", "F") << endl;
-    cout << "Shortest path from A to G: " << g.shortest_path("A", "G") << endl;
-    cout << "Shortest path from A to H: " << g.shortest_path("A", "H") << endl;
-    cout << "Shortest path from C to H: " << g.shortest_path("C", "H") << endl;
+    cout << "[shortest_path test] Shortest path from A to A (expecting just A): " << g.shortest_path("A", "A") << endl;
+    cout << "[shortest_path test] Shortest path from A to B (Expecting A B): " << g.shortest_path("A", "B") << endl;
+    cout << "[shortest_path test] Shortest path from A to C (Expecting A C): " << g.shortest_path("A", "C") << endl;
+    cout << "[shortest_path test] Shortest path from A to D (Expecting A D): " << g.shortest_path("A", "D") << endl;
+    cout << "[shortest_path test] Shortest path from A to E (Expecting A B E): " << g.shortest_path("A", "E") << endl;
+    cout << "[shortest_path test] Shortest path from A to F (Expecting A D F): " << g.shortest_path("A", "F") << endl;
+    cout << "[shortest_path test] Shortest path from A to G (Expecting A C G): " << g.shortest_path("A", "G") << endl;
+    cout << "[shortest_path test] Shortest path from A to H (Expecting A B H): " << g.shortest_path("A", "H") << endl;
+    cout << "[shortest_path test] Shortest path from C to H (Expecting C G H): " << g.shortest_path("C", "H") << endl;
 
     //second test with g2
+    cout << endl << "Next, we will test Graph 2 as detailed in the read me (6 nodes 12 edges):\n";
     Graph g2;
     g2.add_node("A");
     g2.add_node("B");
@@ -345,14 +358,40 @@ int main(){
     g2.add_edge("F","C",1);
     g2.add_edge("E","E",1);
     //second test for spanning tree
-    cout << "Minimum Spanning Tree 2:\n";
+    cout << endl << "[add_node test] Number of nodes in the graph (Expecting 6): " << g2.get_size() << endl;
+    cout << "[add_edge test] Number of edges connected to node A (Expecting 4): " << g2.get_nodes().at(0)->Get_Neighbors().size() << endl;
+    cout << "[minimum_spanning_tree test] Minimum Spanning Tree of Graph 2 (Expecting 5 edges and a fully connected graph):\n";
     cout << g2.minimum_spanning_tree();
     //second set of tests for shortest path
-    cout << "Shortest path from A to F: " << g2.shortest_path("A", "F") << endl;
-    cout << "Shortest path from D to B: " << g2.shortest_path("D", "B") << endl;
-    cout << "Shortest path from F to B: " << g2.shortest_path("F", "B") << endl;
-    cout << "Shortest path from E to E: " << g2.shortest_path("E", "E") << endl;
-    cout << "Shortest path from C to A: " << g2.shortest_path("C", "A") << endl;
+    cout << "[shortest_path test] Shortest path from A to F (Expecting A C F): " << g2.shortest_path("A", "F") << endl;
+    cout << "[shortest_path test] Shortest path from D to B (Expecting D A B): " << g2.shortest_path("D", "B") << endl;
+    cout << "[shortest_path test] Shortest path from F to B (Expecting F C B): " << g2.shortest_path("F", "B") << endl;
+    cout << "[shortest_path test] Shortest path from E to E (Expecting just E): " << g2.shortest_path("E", "E") << endl;
+    cout << "[shortest_path test] Shortest path from C to A (Expecting C A): " << g2.shortest_path("C", "A") << endl;
     
+    //weird graph test
+    cout << endl << "Finally, we will test Graph 3 as detailed in the read me (5 nodes 2 edges):\n";
+    Graph g3;
+    g3.add_node("A");
+    g3.add_node("B");
+    g3.add_node("C");
+    g3.add_node("D");
+    g3.add_node("E");
+    g3.add_edge("A","B",1);
+    g3.add_edge("C","D",1);
+    cout << endl << "[add_node test] Number of nodes in the graph (Expecting 5): " << g3.get_size() << endl;
+    cout << "[add_edge test] Number of edges connected to node E (Expecting 0): " << g3.get_nodes().at(4)->Get_Neighbors().size() << endl;
+    cout << "[add_edge test] Number of edges connected to node B (Expecting 1): " << g3.get_nodes().at(1)->Get_Neighbors().size() << endl;
+    //third test for spanning tree
+    cout << "[minimum_spanning_tree test] Minimum Spanning Tree of Graph 3 (Expecting the edges A - B and C - D):\n";
+    cout << g3.minimum_spanning_tree();
+    //third set of tests for shortest path
+    cout << "[shortest_path test] Shortest path from A to B (Expecting A B): " << g3.shortest_path("A", "B") << endl;
+    cout << "[shortest_path test] Shortest path from C to D (Expecting C D): " << g3.shortest_path("C", "D") << endl;
+    cout << "[shortest_path test] Shortest path from A to C (Expecting error mssg): " << g3.shortest_path("A", "C") << endl;
+    cout << "[shortest_path test] Shortest path from E to A (Expecting error mssg): " << g3.shortest_path("E", "A") << endl;
+    cout << "[shortest_path test] Shortest path from B to D (Expecting error mssg): " << g3.shortest_path("B", "D") << endl;
+    cout << "[shortest_path test] Shortest path from B to fake_node (Expecting error mssg): " << g3.shortest_path("B", "fake_node") << endl;
+    cout << "Tests Complete!";
     return 0;
 }
