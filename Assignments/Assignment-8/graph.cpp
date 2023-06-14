@@ -22,6 +22,7 @@ class GraphNode {
         //get value of node
         string get_value();
         ~GraphNode();
+        //a bunch of getters/setters 
         void set_visited(bool);
         void set_distance(int);
         int get_distance();
@@ -70,8 +71,8 @@ Graph::Graph(){
 }
 
 Graph::~Graph(){
-    for(int i = 0; i < nodes.size(); i++){
-        delete nodes.at(i);
+    for(int i = 0; i < nodes.size(); i++){ //for all nodes 
+        delete nodes.at(i); //delete the nodes
     }
 }
 
@@ -241,10 +242,11 @@ string Graph::minimum_spanning_tree(){
 }
 
 //GraphNode stuff
-GraphNode::GraphNode(string name){
+GraphNode::GraphNode(string name){ //basic comstructor, set node name
     value = name;
 }
 
+//a bunch of getters and setters, not much to say
 void GraphNode::set_visited(bool visit){
     this->visited = visit;
 }
@@ -270,15 +272,15 @@ string GraphNode::get_predecessor(){
 }
 
 GraphNode::~GraphNode(){
-    for(auto neighbor: neighbors){
-        delete neighbor;
+    for(auto neighbor: neighbors){ //for all neighbors in a nodes edge vector
+        delete neighbor; //delete the neighbors
     }
-    neighbors.clear();
+    neighbors.clear(); //clear the vector
 }
 
 void GraphNode::Add_Edge(GraphNode *destination, int weight){
-    edge* newEdge = new edge{this, destination, weight};
-    neighbors.push_back(newEdge);
+    edge* newEdge = new edge{this, destination, weight}; //make a new edge on the heap
+    neighbors.push_back(newEdge); //put it into the nodes edge vector
 }
 
 vector<edge*> GraphNode::Get_Neighbors(){
@@ -302,7 +304,7 @@ int main(){
     g.add_node("F");
     g.add_node("G");
     g.add_node("H");
-    g.add_edge("A", "A", 1);
+    g.add_edge("A", "A", 1); 
     g.add_edge("A", "B", 1);
     g.add_edge("A", "C", 1);
     g.add_edge("A", "D", 1);
