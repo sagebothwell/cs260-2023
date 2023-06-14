@@ -102,7 +102,7 @@ Further, 1 + 1(1-1)/2 = 1, so the base case works
 Now assume that the claim holds through (n-1) nodes and consider a graph with n nodes.
 To begin, we can make n edges from the first edge to every other edge including itself.
 Now, we have (n-1) nodes remaining with no direct connections between eachother. Because
-our cl;aim holkds for (n-1) nodes, we know there can be a maximum of (n-1)+(n-1)(n-2)/2 connections
+our claim holds for (n-1) nodes, we know there can be a maximum of (n-1)+(n-1)(n-2)/2 connections
 here.
 
 Thus, there is a max of n+(n-1)+(n-1)(n-2)/2 nodes in this graph, and further:
