@@ -3,22 +3,33 @@ contents which describes where everything can be found.
 
 Table of Contents:
 Design for my Graph - line 19
-Description of Minimum Spanning Tree Function - line 27
-Pseudocode for Minimum Spanning Tree Function - line 36
-Complexity Analysis for Minimum Spanning Tree Function - line 81
-Description of Shortest Path Function - line 134
-Pseudocode for Shortest Path Function - line 142
-Conplexity Analysis for Shortest Path Function - line 172
-Add Node/Add Edge Functions - line 196
-Complexity of the Adding Functions - line 201
-Extraneous Functions - line 207
-Possible Tests - line 213
-Where Stuff Shows up in the Code - line 282
-A problem that graphs can solve - line 290
+Description of Minimum Spanning Tree Function - line 38
+Pseudocode for Minimum Spanning Tree Function - line 47
+Complexity Analysis for Minimum Spanning Tree Function - line 92
+Description of Shortest Path Function - line 145
+Pseudocode for Shortest Path Function - line 153
+Conplexity Analysis for Shortest Path Function - line 183
+Add Node/Add Edge Functions - line 207
+Complexity of the Adding Functions - line 212
+Extraneous Functions - line 218
+Possible Tests - line 224
+Where Stuff Shows up in the Code - line 293
+A problem that graphs can solve - line 301
 
 Design for my graph:
 My graph will be an unweighted undirected graph. My add node and add edge functions will be the same as we wrote in class, and the minimum spannning tree and
-shortest path functions will be designed with Kruskal's and Djikstra's algorithms respectively.
+shortest path functions will be designed with Kruskal's and Djikstra's algorithms respectively. 
+The Graph will be a class which will contain the 4 required functions, a constructor/destructor, and a private member vector of GraphNodes.
+GraphNodes will also be a class with a constructor/destructor, a function for adding edges, and getters/setters for its private member variables.
+    GraphNode private member variables:
+        -a string to store the GraphNode's name
+        -a vector containing all of the edges connected to the GraphNode
+        -a bool to say if the node has been visited (for shortest path)
+        -an int to say the distance a node is from some other node (for shortest path)
+        -a string whioch says what the GraphNode's predecessor is in the shortest path algorithm (only used in shortest path)
+Finally, the Edge will be a struct which contains two GraphNode pointers for the edge's source and destination and an int for weight.
+***Note, while weight is present in my Edge struct and does show up in some of the functions, I ultimately descided not to use it, I could have gone back and deleted all
+instances of weight, but by the time I decided not to use it I was already too deep. As it stands, it is an unused member variable which is always set to 1.
 
 After finishing my design, here are a few things that I found will be required in my graph:
     -Each node in the graph must have a ditsinct name (breaks minimum spanniong tree and shortest path)
