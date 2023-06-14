@@ -1,17 +1,20 @@
+NOTE: This whole README is my design, but I also put the complexity analysis and lines where I meet the requrements stuff into this README. Below is a table of 
+contents which describes where everything can be found.
+
 Table of Contents:
-Design for my Graph - line 16
-Description of Minimum Spanning Tree Function - line 24
-Pseudocode for Minimum Spanning Tree Function - line 33
-Complexity Analysis for Minimum Spanning Tree Function - line 78
-Description of Shortest Path Function - line 131
-Pseudocode for Shortest Path Function - line 139
-Conplexity Analysis for Shortest Path Function - line 169
-Add Node/Add Edge Functions - line 193
-Complexity of the Adding Functions - line 199
-Extraneous Functions - line 204
-Possible Tests - line 210
-Where Stuff Shows up in the Code - line 279
-A problem that graphs can solve - line 287
+Design for my Graph - line 19
+Description of Minimum Spanning Tree Function - line 27
+Pseudocode for Minimum Spanning Tree Function - line 36
+Complexity Analysis for Minimum Spanning Tree Function - line 81
+Description of Shortest Path Function - line 134
+Pseudocode for Shortest Path Function - line 142
+Conplexity Analysis for Shortest Path Function - line 172
+Add Node/Add Edge Functions - line 196
+Complexity of the Adding Functions - line 201
+Extraneous Functions - line 207
+Possible Tests - line 213
+Where Stuff Shows up in the Code - line 282
+A problem that graphs can solve - line 290
 
 Design for my graph:
 My graph will be an unweighted undirected graph. My add node and add edge functions will be the same as we wrote in class, and the minimum spannning tree and
